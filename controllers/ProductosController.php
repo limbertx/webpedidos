@@ -130,6 +130,10 @@ class ProductosController extends Controller
                         // guardamos el link de la imagen
                         Yii::warning("nombre : " . $model->image->baseName);
                         $imagen = Imagenes::find()->where(["fkProducto"=>$model->pkProducto])->one();
+                        if($imagen == null){
+                            $imagen = new Imagenes();
+                        }
+                        
                         $imagen->ruta = "uploads/";
                         $imagen->nombre = "prod-". $model->pkProducto;
                         $imagen->extension = $model->image->extension;
