@@ -29,6 +29,11 @@ class m180910_014225_database extends Migration
             'abreviatura' => $this->string(10)->notNull()
         ]);
 
+        $this->insert('monedas', [
+            'descripcion' => 'Bolivianos',
+            'abreviatura' => 'Bs.',
+        ]);
+
         $this->createTable('configuraciones', [
             'pkConfiguracion' => $this->primaryKey(),
             'tipoClienteDefecto'   => $this->string(25)->notNull(),
@@ -40,6 +45,11 @@ class m180910_014225_database extends Migration
             'pkMedida' => $this->primaryKey(),
             'descripcion'   => $this->string(25)->notNull(),
             'abreviatura' => $this->string(10)->notNull()            
+        ]);
+
+        $this->insert('medidas', [
+            'descripcion' => 'Unidad',
+            'content' => 'ud.',
         ]);
 
         $this->createTable('productos', [

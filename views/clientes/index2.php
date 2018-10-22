@@ -23,9 +23,9 @@ $this->params['breadcrumbs'][] = $this->title;
         "enableClientValidation"=> true
     ]);?>
 
-        <?= $form->field($searchModel, 'search')->input("search") ?>
+    <?= $form->field($searchModel, 'search')->input("search") ?>
          
-        <?= Html::submitButton("Buscar", ["class" => "btn btn-primary"])?>
+    <?= Html::submitButton("Buscar", ["class" => "btn btn-primary"])?>
     <?php $form->end(); ?>
     <table class="table table-bordered">
         <tr>
@@ -42,15 +42,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 <td><?= $cliente->direccion; ?></td>
                 <td><?= $cliente->telfMovil; ?></td>
                 <td style="white-space:nowrap; width: 1%;">
-                    <a href="#" data-toggle="tooltip" title="Ver">
+                    <a href="<?= Url::to(['clientes/view', 'id'=>$cliente->pkCliente])?>" data-toggle="tooltip" title="Ver">
                         <span class="glyphicon glyphicon-eye-open"></span> 
                     </a>
-                    <a href="#" data-toggle="tooltip" title="Editar">
+                    <a href="<?= Url::to(['clientes/update', 'id'=>$cliente->pkCliente])?>" data-toggle="tooltip" title="Editar">
                         <span class="glyphicon glyphicon-pencil"></span> 
                     </a>                    
                     <a href="#" data-toggle="tooltip" title="Eliminar">
                         <span class="glyphicon glyphicon-trash"></span> 
-                    </a>                             
+                    </a>
                 </td>
             </tr>
         <?php }?>

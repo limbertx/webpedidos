@@ -3,11 +3,13 @@
 namespace app\controllers;
 
 use Yii;
+use yii\helpers\Html;
 use app\models\Productos;
 use app\models\Imagenes;
 use app\models\ProductosSearch;
 use yii\web\UploadedFile;
 use yii\web\Controller;
+use yii\data\Pagination;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -38,12 +40,48 @@ class ProductosController extends Controller
     public function actionIndex()
     {
         $searchModel = new ProductosSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $search = null;
+        $pagination = null;
+        $productos = null;
+        if($searchModel->load(Yii::$app->request->get())){
+            if($searchModel->validate()){
+                $search = Html::encode($searchModel->search);
+                $query = Productos::find()
+                            ->Where(["like", "nombre", $search]);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+                $count = $query->count();
+
+                $pagination = new Pagination([
+                                        "totalCount"=>$count,
+                                        "pageSize"=> 5
+                                    ]);
+
+                $productos = $query->offset($pagination->offset)
+                                  ->limit($pagination->limit)
+                                  ->all();
+            }else{
+                $searchModel->getErrors();
+            }
+
+        }else{ // cuando no llega ninguna busqueda
+            $query = Productos::find();
+            $count = $query->count();
+            
+            $pagination = new Pagination([
+                                    "totalCount"=>$count,
+                                    "pageSize"=> 5
+                                ]);
+            $productos = $query->offset($pagination->offset)
+                              ->limit($pagination->limit)
+                              ->all();
+        }
+
+        return $this->render('index2', [
+            "productos" => $productos,
+            "searchModel" => $searchModel,
+            "pagination" => $pagination,
         ]);
+
     }
 
     /**

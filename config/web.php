@@ -51,16 +51,58 @@ $config = [
         'urlManager' => [
             'class' => 'yii\web\UrlManager',
             'enablePrettyUrl' => true,
+            'enableStrictParsing' => false,
             'showScriptName' => false,
             'rules' => [
-                //['class' => 'yii\rest\UrlRule', 'controller' => 'clientes'],
+                [
+                    'class' => 'yii\rest\UrlRule', 
+                    'controller' => 'site',
+                    'extraPatterns' => [
+                        'GET about' => 'about',
+                        'GET contact' => 'contact',
+                        'GET login' => 'login'
+                    ]
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule', 
+                    'controller' => 'clientes',
+                    'extraPatterns' => [
+                        'GET index' => 'index',
+                        'GET create' => 'create',
+                    ]
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule', 
+                    'controller' => 'productos',
+                    'extraPatterns' => [
+                        'GET index' => 'index',
+                        'GET view/<id>' => 'view',
+                        'GET create' => 'create',
+                        'POST create' => 'create',
+                        'POST update/<id>' => 'update'
+                    ]
+
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule', 
+                    'controller' => 'pedidos'
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule', 
+                    'controller' => 'restpedidos',
+                    'extraPatterns' => [
+                        'GET getproductos' => 'getproductos'
+                    ]
+                ],
+
             ],
         ],
         
     ],
     'params' => $params,
 ];
-/**
+
+/*
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment
     $config['bootstrap'][] = 'debug';
@@ -77,5 +119,5 @@ if (YII_ENV_DEV) {
         //'allowedIPs' => ['127.0.0.1', '::1'],
     ];
 }
-**/
+*/
 return $config;

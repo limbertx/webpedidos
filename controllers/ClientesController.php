@@ -44,8 +44,7 @@ class ClientesController extends Controller
             if($searchModel->validate()){
                 $search = Html::encode($searchModel->search);
                 $query = Clientes::find()
-                            ->where(["like", "pkCliente", $search])
-                            ->orWhere(["like", "nombres", $search])
+                            ->Where(["like", "nombres", $search])
                             ->orWhere(["like", "apellidos", $search])
                             ->orWhere(["like", "direccion", $search])
                             ->orWhere(["like", "telfMovil", $search]);
