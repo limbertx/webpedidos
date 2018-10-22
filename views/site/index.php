@@ -6,12 +6,10 @@ $this->title = 'My Yii Application';
 ?>
 <div class="site-index">
 
-    <div class="jumbotron">
-        <h1>Pagina de inicio!</h1>
-
-        <p class="lead">texto de inicio para la pagina de inicio.</p>
-    </div>
-
+    <center>
+        <img class="img-rounded responsive" src="<?=Yii::getAlias('@web').'/img/qr.png' ?>">
+    </center>
+    
     <div class="body-content">
 
         <div class="row">
