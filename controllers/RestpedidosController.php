@@ -12,6 +12,10 @@ class RestpedidosController extends ActiveController {
 	public $modelClass = "app\models\Medidas";
 
 	// es la url http://localhost/pedido/web/uploads/prod-1.jpg
+
+	/**
+	 * servicio que envia una lista de productos
+	 */
 	public function actionGetproductos(){
 		
 		$response = array();
@@ -44,4 +48,15 @@ class RestpedidosController extends ActiveController {
 		return $response;
 		
 	}
+	/**
+	 * metodo que inserta un pedido en el 
+	 */
+	public function actionSetPedido($value){
+		// pkPedido, codigo, fkCliente, fechaPedido, fechaAtendida, precioTotal, estadoPedido
+		//_______________________________________________________________
+		//DETALLE
+		//pkPedidoDetalle, fkPedido, fkProducto, cantidad, precioUnitario, precioTotal
+		return "pedido guardado";
+	}
+
 }
