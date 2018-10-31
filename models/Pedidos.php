@@ -50,7 +50,7 @@ class Pedidos extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'pkPedido' => 'Pk Pedido',
+            'pkPedido' => 'Nro. pedido',
             'codigo' => 'Codigo',
             'fkCliente' => 'Fk Cliente',
             'fechaPedido' => 'Fecha Pedido',
