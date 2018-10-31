@@ -91,7 +91,8 @@ $config = [
                     'class' => 'yii\rest\UrlRule', 
                     'controller' => 'restpedidos',
                     'extraPatterns' => [
-                        'GET getproductos' => 'getproductos'
+                        'GET getproductos' => 'getproductos',
+                        'POST setpedido/<detail>/<head>' => 'setpedido',      
                     ]
                 ],
 
