@@ -1,6 +1,7 @@
 <?php 
 namespace app\controllers;
 
+use Yii;
 use yii\db\Expression;
 use yii\rest\ActiveController;
 use app\models\Medidas;
@@ -53,10 +54,20 @@ class RestpedidosController extends ActiveController {
 	/**
 	 * metodo que inserta un pedido en la base de datos
 	 */
-	public function actionSetpedido($detail, $head){
+	public function actionSetpedido(){
 		
 		$response = array();		
 		// pkPedido, codigo, fkCliente, fechaPedido, fechaAtendida, precioTotal, estadoPedido
+		if(!Yii::$app->request->post()){
+			$response["status"] = "500";
+			$response["response"] = "no se encontraron datos!";
+			return $response;
+		}
+
+		$data = Yii::$app->request->post();
+		$head = $data["head"];
+		$detail = $data["detail"];
+
 		$encabezado = json_decode($head);
 		$model = new Pedidos();
 		$model->fkCliente = 1; // $head->fkCliente
@@ -92,6 +103,7 @@ class RestpedidosController extends ActiveController {
 				$response["status"] = "500";
 				$response["response"] = $model->getErrors();
 		}
+		
 		return $response;
 	}
 }

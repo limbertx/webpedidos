@@ -92,7 +92,7 @@ $config = [
                     'controller' => 'restpedidos',
                     'extraPatterns' => [
                         'GET getproductos' => 'getproductos',
-                        'POST setpedido/<detail>/<head>' => 'setpedido',      
+                        'POST setpedido' => 'setpedido',
                     ]
                 ],
 
