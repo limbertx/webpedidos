@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Pedidos;
 use app\models\PedidosSearch;
+use yii\data\Pagination;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -36,11 +37,47 @@ class PedidosController extends Controller
     public function actionIndex()
     {
         $searchModel = new PedidosSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $search = null;
+        $pagination = null;
+        $pedidos = null;
+        if($searchModel->load(Yii::$app->request->get())){
+            if($searchModel->validate()){
+                $search = Html::encode($searchModel->search);
+                $query = Pedidos::find()
+                            ->Where(["like", "nombre", $search])
+                            ->orWhere(["like", "estadoPedido", $search]);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+                $count = $query->count();
+
+                $pagination = new Pagination([
+                                        "totalCount"=>$count,
+                                        "pageSize"=> 5
+                                    ]);
+
+                $pedidos = $query->offset($pagination->offset)
+                                  ->limit($pagination->limit)
+                                  ->all();
+            }else{
+                $searchModel->getErrors();
+            }
+
+        }else{ // cuando no llega ninguna busqueda
+            $query = Pedidos::find();
+            $count = $query->count();
+            
+            $pagination = new Pagination([
+                                    "totalCount"=>$count,
+                                    "pageSize"=> 5
+                                ]);
+            $pedidos = $query->offset($pagination->offset)
+                              ->limit($pagination->limit)
+                              ->all();
+        }
+
+        return $this->render('index2', [
+            "pedidos" => $pedidos,
+            "searchModel" => $searchModel,
+            "pagination" => $pagination,
         ]);
     }
 
@@ -52,26 +89,13 @@ class PedidosController extends Controller
      */
     public function actionView($id)
     {
+        $pedidos = $this->findModel($id);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
-     * Creates a new Pedidos model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new Pedidos();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->pkPedido]);
-        }
-
-        return $this->render('create', [
-            'model' => $model,
+            'nombre' => $pedidos->fkCliente0->nombres . " " . $pedidos->fkCliente0->apellidos,
+            'fecha'=>Yii::$app->formatter->asDate($pedidos->fechaPedido, 'dd-MM-yyyy HH:mm'),
+            'direccion'=> $pedidos->fkCliente0->direccion,
+            'pedidos'=>$pedidos
         ]);
     }
 
@@ -93,20 +117,6 @@ class PedidosController extends Controller
         return $this->render('update', [
             'model' => $model,
         ]);
-    }
-
-    /**
-     * Deletes an existing Pedidos model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
     }
 
     /**
