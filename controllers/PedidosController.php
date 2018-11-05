@@ -2,11 +2,13 @@
 
 namespace app\controllers;
 
+use kartik\mpdf\Pdf;
 use Yii;
 use app\models\Pedidos;
 use app\models\PedidosSearch;
 use yii\data\Pagination;
 use yii\web\Controller;
+use yii\helpers\Html;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -43,9 +45,9 @@ class PedidosController extends Controller
         if($searchModel->load(Yii::$app->request->get())){
             if($searchModel->validate()){
                 $search = Html::encode($searchModel->search);
-                $query = Pedidos::find()
-                            ->Where(["like", "nombre", $search])
-                            ->orWhere(["like", "estadoPedido", $search]);
+                $query = Pedidos::find()                            
+                            ->Where(["like", "estadoPedido", $search]);
+
 
                 $count = $query->count();
 
@@ -81,6 +83,44 @@ class PedidosController extends Controller
         ]);
     }
 
+    public function actionImprimir($id){
+
+        $pedidos = $this->findModel($id);        
+        $code = str_pad((string)$pedidos->pkPedido, 6, "0", STR_PAD_LEFT);
+        $nombre = $pedidos->fkCliente0->nombres . " " . $pedidos->fkCliente0->apellidos;
+        $fecha = Yii::$app->formatter->asDate($pedidos->fechaPedido, 'dd-MM-yyyy');
+        $direccion = $pedidos->fkCliente0->direccion;
+        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+        $pdf = new Pdf([
+            'mode'      => Pdf::MODE_CORE,
+            'format'    => Pdf::FORMAT_LETTER,
+            'content'   => $this->getHTML($code, $nombre, $fecha, $direccion, $pedidos),
+            "filename"  => "P-".$code.".pdf",
+            'options'   => [
+                        'title' => 'Krajee Report Title',
+                           ],
+            'methods'   => [
+                'SetTitle' => 'Pedido # '. $code,
+                'SetSubject' => 'Generado por webpedidos(Codeyal soluciones)',
+                'SetHeader' => ['Documento generado el: ' . date("d-M-Y H:i:s")],
+                'SetFooter' => ['|Pagina {PAGENO}|'],
+                'SetAuthor' => 'codeyal soluciones',
+                'SetCreator' => 'codeyal soluciones',
+                'SetKeywords' => 'codeyal, Export, PDF, yii2-mpdf',
+                            ]
+        ]);
+        return $pdf->render();
+    }
+    /**
+     * 
+     */
+    public function actionAttend($id){
+        $pedidos = $this->findModel($id);
+        $pedidos->estadoPedido="ATENDIDO";
+        $pedidos->save();
+
+        return $this->redirect(['index']);
+    }
     /**
      * Displays a single Pedidos model.
      * @param integer $id
@@ -90,8 +130,12 @@ class PedidosController extends Controller
     public function actionView($id)
     {
         $pedidos = $this->findModel($id);
-
-        return $this->render('view', [
+        
+        $code = str_pad((string)$pedidos->pkPedido, 6, "0", STR_PAD_LEFT);
+    
+        return $this->render('view',
+         [
+            'code' => $code,
             'nombre' => $pedidos->fkCliente0->nombres . " " . $pedidos->fkCliente0->apellidos,
             'fecha'=>Yii::$app->formatter->asDate($pedidos->fechaPedido, 'dd-MM-yyyy HH:mm'),
             'direccion'=> $pedidos->fkCliente0->direccion,
@@ -133,5 +177,85 @@ class PedidosController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function getHTML($code, $nombre, $fecha, $direccion, $pedidos){
+
+    $html = '
+    <h3 align="center">Pedido #' . $code .'</h3>
+    <hr style=" margin:0; padding:0;">
+    <table>
+        <tr>
+            <td style="width:500px; height: 40px;">
+                <p>
+                    <strong>
+                        Nombre de cliente:
+                    </strong>
+                    ' . $nombre . '
+                </p>            
+            </td>
+            <td style="width:200px; height: 40px;">
+                <p>
+                    <strong>
+                        Fecha de pedido:
+                    </strong>
+                    ' . $fecha . '
+                </p>            
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="height: 40px;">
+                <p align="left">
+                    <strong>
+                        Direccion de cliente:
+                    </strong>
+                    ' . $direccion . '
+                </p>
+            </td>
+        </tr>        
+    </table>
+
+    <hr style=" margin:0; padding:0;">
+    <h4 align="center">Detalle de pedido</h4>
+    <hr style=" margin:0; padding:0;">
+    <br>
+    <br>
+    <table border="1" style="border-collapse: collapse;">
+        <tr>
+            <th style="width:40px; background-color: #C9C9C9;" align="center">#</th>
+            <th style="width:310px; background-color: #C9C9C9;" align="center">PRODUCTO</th>
+            <th style="width:100px; background-color: #C9C9C9;" align="center">CANTIDAD</th>
+            <th style="width:150px; background-color: #C9C9C9;" align="center">PRECIO UNITARIO</th>
+            <th style="width:100px; background-color: #C9C9C9;" align="center">PRECIO TOTAL</th>
+        </tr>
+        ';
+
+                                
+        $index = 1; 
+        $detalles = $pedidos->getPedidoDetalles()->all();
+        foreach($detalles as $detalle){
+            $html .= "<tr>";
+            $html .= '<td align="center">'. $index .'</td>';
+            $html .= '<td><p>'. $detalle->fkProducto0->nombre .'</p></td>';
+            $html .= '<td align="center"><p>'. $detalle->cantidad .'</p></td>';
+            $html .= '<td align="center"><p>'.$detalle->precioUnitario.'</p></td>';
+            $html .= '<td align="center"><p>'.$detalle->precioTotal.'</p></td>';
+            $html .= '</tr>';
+            $index = $index + 1;
+        }
+
+        $html = $html . '<tr>
+            <td colspan="4" align="right">
+                <p>Precio total (Bolivianos):</p>    
+            </td>
+            <td align="center">
+            <p>'.$pedidos->precioTotal.'</p>
+            </td>
+        </tr>
+    </table>
+
+    <p>&nbsp;</p>';
+
+    return $html;
     }
 }
