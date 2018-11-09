@@ -121,7 +121,7 @@ class RestpedidosController extends ActiveController {
 			return $response;			
 		}
 
-		$client = Clientes::find()->where(['telfMovil' => $telefono])->one();
+		$client = Clientes::find()->where(['like', 'telfMovil', $telefono])->one();
 
 		if($client != null){
 			$item = array();
