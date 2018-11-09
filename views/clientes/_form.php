@@ -6,6 +6,7 @@ use kartik\widgets\Select2;
 
 <div class="clientes-form">
 
+
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'nombres')->textInput(['maxlength' => true]) ?>

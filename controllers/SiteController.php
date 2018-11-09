@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\Message;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
@@ -115,7 +116,18 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
-
+    public function actionSend(){
+        $titulo = Yii::$app->request->get("titulo");
+        $mensaje = Yii::$app->request->get("mensaje");
+        if(isset($titulo) || isset($mensaje)){
+            $model = new Message();    
+            return $this->redirect(['about']);
+        }else{
+            $service = new FirebaseNotifications(['authKey' => 'AAAAy9IgdN4:APA91bGA8dsWzCfoRwy0npwqboLxvDhrI_6HAEplY0pjXMSeEzVbqvIUYVuNrSM0l5H_ZecVpwJsF5EqsCI1pMrd3DcdSs_5Rkz890EkrjXgMPxeq-Cru-ATN0J4j8SY3-P7x-feNYCj']);
+            $service->sendNotification($tokens, $message);
+        }
+            
+    }
     /**
      * Displays about page.
      *
@@ -123,6 +135,12 @@ class SiteController extends Controller
      */
     public function actionAbout()
     {
-        return $this->render('about');
+        $model = new Message();
+        $model->titulo = "";
+        $model->mensaje= "";
+
+        return $this->render('about', [
+            'model'=> $model,
+        ]);
     }
 }

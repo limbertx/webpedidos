@@ -5,6 +5,7 @@ use Yii;
 use yii\db\Expression;
 use yii\rest\ActiveController;
 use app\models\Medidas;
+use app\models\Clientes;
 use app\models\Productos;
 use app\models\Pedidos;
 use app\models\PedidoDetalles;
@@ -56,7 +57,7 @@ class RestpedidosController extends ActiveController {
 	 */
 	public function actionSetpedido(){
 		
-		$response = array();		
+		$response = array();
 		// pkPedido, codigo, fkCliente, fechaPedido, fechaAtendida, precioTotal, estadoPedido
 		if(!Yii::$app->request->post()){
 			$response["status"] = "500";
@@ -100,10 +101,87 @@ class RestpedidosController extends ActiveController {
 				}
 			}
 		}else{
-				$response["status"] = "500";
-				$response["response"] = $model->getErrors();
+			$response["status"] = "500";
+			$response["response"] = $model->getErrors();
 		}
 		
 		return $response;
+	}
+	/**
+	 * metodo que envia un cliente a la peticion en base al telefono del cliente 
+	 *  http://localhost/pedido/web/restpedidos/getcliente/3364987
+	 */
+	public function actionGetcliente($telefono){
+
+		$response = array();
+
+		if(is_null($telefono)){
+			$response["status"] = "500";
+			$response["response"] = $model->getErrors();
+			return $response;			
+		}
+
+		$client = Clientes::find()->where(['telfMovil' => $telefono])->one();
+
+		if($client != null){
+			$item = array();
+			$item["pkCliente"]	 = $client->pkCliente;
+			$item["nombres"] 	 = $client->nombres;
+			$item["apellidos"]   = $client->apellidos;
+			$item["direccion"]   = $client->direccion;
+			$item["telfMovil"]   = $client->telfMovil;
+			$item["tipoCliente"] = $client->tipoCliente;
+			$item["tipoCuenta"]  = $client->tipoCuenta;
+
+			$response["status"]  = "200";
+			$response["response"]= $item;
+		}else{
+			$response["status"]  = "505";
+			$response["response"]= "No se encontro ningun cliente";
+		}
+
+		return $response;
+	}
+	/** metodo que actualiza o ingresa un cliente.
+	 * http://localhost/pedido/web/restpedidos/updatecliente
+	 * @return [type]
+	 */
+	public function actionUpdatecliente(){
+		$response = array();
+
+		$item = Yii::$app->request->post();
+		$telefono = $item["telfMovil"];
+
+		$client = Clientes::find()
+						->where(['telfMovil' => $telefono])
+						->one();
+
+		if($client != null){ // entonces actualizamos
+			$client->nombres   = $item["nombres"];
+			$client->apellidos = $item["apellidos"];
+			$client->direccion = $item["direccion"];
+			$client->telfMovil = $item["telfMovil"];
+			//$client->tipoCliente = $item["tipoCliente"];
+			//$client->tipoCliente = "MINORISTA";
+			//$client->tipoCuenta = $item["tipoCuenta"];
+			//$client->tipoCuenta = "USUARIO";
+			$client->save();
+		}else{
+			$client = new Clientes();
+			$client->nombres   = $item["nombres"];
+			$client->apellidos = $item["apellidos"];
+			$client->direccion = $item["direccion"];
+			$client->telfMovil = $item["telfMovil"];
+			//$client->tipoCliente = $item["tipoCliente"];
+			$client->tipoCliente = "MINORISTA";
+			//$client->tipoCuenta = $item["tipoCuenta"];
+			$client->tipoCuenta = "USUARIO";
+			$client->save();			
+		}
+
+		$response["status"] = "200";
+		$response["response"] = "ok";		
+		
+		return $response; 
 	}
 }
