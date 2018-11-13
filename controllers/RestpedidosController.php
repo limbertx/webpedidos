@@ -71,8 +71,8 @@ class RestpedidosController extends ActiveController {
 
 		$encabezado = json_decode($head);
 		$model = new Pedidos();
-		//$model->fkCliente = 1; // $head->fkCliente
-		$model->fkCliente = $head->fkCliente;
+		$model->fkCliente = $encabezado->fkCliente;
+			
 		$model->codigo = "0000";
 		$model->fechaPedido = new Expression('NOW()');
 		$model->fechaAtendida = null;
