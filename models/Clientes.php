@@ -14,6 +14,7 @@ use Yii;
  * @property string $telfMovil
  * @property string $tipoCliente
  * @property string $tipoCuenta
+ * @property string $token
  *
  * @property Pedidos[] $pedidos
  */

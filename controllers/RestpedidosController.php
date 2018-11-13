@@ -52,6 +52,34 @@ class RestpedidosController extends ActiveController {
 		return $response;
 		
 	}
+	public function actionUpdatetoken(){		
+		$response = array();
+		if(!Yii::$app->request->post()){
+			$response["status"] = "500";
+			$response["response"] = "no se encontraron datos!";
+			return $response;
+		}
+
+		$data = Yii::$app->request->post();
+		$token = $data["token"];
+		$telefono = $data["telefono"];
+		$pkClliente = $data["fkCliente"];
+
+		$client = Clientes::find()
+						->where(['telfMovil' => $telefono])
+						->one();
+		if($client != null){
+			$client->token = $token;
+			if($client->save()){
+				$response["status"]  = "200";
+				$response["response"] = "se actualizo correctamente";
+			}else{
+				$response["status"] = "500";
+				$response["response"] = $model->getErrors();
+			}			
+		}	
+		return $response;
+	}	
 	/**
 	 * metodo que inserta un pedido en la base de datos
 	 */
