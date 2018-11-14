@@ -28,12 +28,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'precioIntermedio') ?>
 
-    <?php // echo $form->field($model, 'precioMayorista') ?>
-
-    <?php // echo $form->field($model, 'precioMinorista') ?>
-
-    <?php // echo $form->field($model, 'fkMoneda') ?>
-
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
         <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>

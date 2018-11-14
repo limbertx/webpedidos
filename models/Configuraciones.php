@@ -10,7 +10,8 @@ use Yii;
  * @property int $pkConfiguracion
  * @property string $tipoClienteDefecto
  * @property string $emailAdministrador
- * @property string $cuentaAdminMovil
+ * @property int $fkClienteAdmin
+ * @property int $fkMonedaDefecto
  */
 class Configuraciones extends \yii\db\ActiveRecord
 {
@@ -28,9 +29,11 @@ class Configuraciones extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tipoClienteDefecto', 'emailAdministrador', 'cuentaAdminMovil'], 'required'],
+            [['tipoClienteDefecto', 'emailAdministrador', 'fkClienteAdmin', 'fkMonedaDefecto'], 'required'],
+            [['fkClienteAdmin', 'fkMonedaDefecto'], 'default', 'value' => null],
+            [['fkClienteAdmin', 'fkMonedaDefecto'], 'integer'],
             [['tipoClienteDefecto'], 'string', 'max' => 25],
-            [['emailAdministrador', 'cuentaAdminMovil'], 'string', 'max' => 50],
+            [['emailAdministrador'], 'string', 'max' => 50],
         ];
     }
 
@@ -40,10 +43,11 @@ class Configuraciones extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'pkConfiguracion' => 'Pk Configuracion',
+            'pkConfiguracion' => 'Identificador primario',
             'tipoClienteDefecto' => 'Tipo Cliente Defecto',
             'emailAdministrador' => 'Email Administrador',
-            'cuentaAdminMovil' => 'Cuenta Admin Movil',
+            'fkClienteAdmin' => 'Cliente administrador',
+            'fkMonedaDefecto' => 'Tipo de Moneda',
         ];
     }
 }

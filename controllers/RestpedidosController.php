@@ -35,7 +35,7 @@ class RestpedidosController extends ActiveController {
 			$item["precioMinorista"] = $producto->precioMinorista;
 			$item["precioIntermedio"] = $producto->precioIntermedio;
 			$item["medida"] = $producto->fkMedida0->abreviatura;
-			$item["moneda"] = $producto->fkMoneda0->abreviatura;
+			$item["moneda"] = "Bs."; // cambiar por la configuracion
 			//$item["url"] = "";
 			$imagenes = $producto->imagenes;
 			foreach ($imagenes as $imagen) {

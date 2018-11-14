@@ -16,12 +16,10 @@ use Yii;
  * @property string $precioIntermedio
  * @property string $precioMayorista
  * @property string $precioMinorista
- * @property int $fkMoneda
  *
  * @property Imagenes[] $imagenes
  * @property PedidoDetalles[] $pedidoDetalles
  * @property Medidas $fkMedida0
- * @property Monedas $fkMoneda0
  */
 class Productos extends \yii\db\ActiveRecord
 {
@@ -46,13 +44,12 @@ class Productos extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nombre', 'fkMedida', 'precioIntermedio', 'precioMayorista', 'precioMinorista', 'fkMoneda'], 'required'],
-            [['fkMedida', 'fkMoneda'], 'integer'],
+            [['nombre', 'fkMedida', 'precioIntermedio', 'precioMayorista', 'precioMinorista'], 'required'],
+            [['fkMedida'], 'integer'],
             [['precioIntermedio', 'precioMayorista', 'precioMinorista'], 'number'],
             [['nombre'], 'string', 'max' => 50],
             [['descripcion'], 'string', 'max' => 100],
             [['fkMedida'], 'exist', 'skipOnError' => true, 'targetClass' => Medidas::className(), 'targetAttribute' => ['fkMedida' => 'pkMedida']],
-            [['fkMoneda'], 'exist', 'skipOnError' => true, 'targetClass' => Monedas::className(), 'targetAttribute' => ['fkMoneda' => 'pkMoneda']],
             [['image'], 'safe'],
             [['image'], 'file', 'extensions' => 'jpg, png', 'maxFiles' => 1],
 
@@ -72,7 +69,6 @@ class Productos extends \yii\db\ActiveRecord
             'precioIntermedio' => 'P. Intermediario',
             'precioMayorista' => 'P. Mayorista',
             'precioMinorista' => 'P. Minorista',
-            'fkMoneda' => 'Moneda',
             'image' =>""
         ];
     }
@@ -111,13 +107,5 @@ class Productos extends \yii\db\ActiveRecord
     public function getFkMedida0()
     {
         return $this->hasOne(Medidas::className(), ['pkMedida' => 'fkMedida']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getFkMoneda0()
-    {
-        return $this->hasOne(Monedas::className(), ['pkMoneda' => 'fkMoneda']);
     }
 }

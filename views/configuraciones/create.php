@@ -2,12 +2,7 @@
 
 use yii\helpers\Html;
 
-
-/* @var $this yii\web\View */
-/* @var $model app\models\Configuraciones */
-
-$this->title = 'Create Configuraciones';
-$this->params['breadcrumbs'][] = ['label' => 'Configuraciones', 'url' => ['index']];
+$this->title = 'Configuracion de sistema';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="configuraciones-create">
@@ -17,5 +12,4 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>
-
 </div>

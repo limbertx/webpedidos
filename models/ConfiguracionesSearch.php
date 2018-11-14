@@ -18,8 +18,8 @@ class ConfiguracionesSearch extends Configuraciones
     public function rules()
     {
         return [
-            [['pkConfiguracion'], 'integer'],
-            [['tipoClienteDefecto', 'emailAdministrador', 'cuentaAdminMovil'], 'safe'],
+            [['pkConfiguracion', 'fkClienteAdmin', 'fkMonedaDefecto'], 'integer'],
+            [['tipoClienteDefecto', 'emailAdministrador'], 'safe'],
         ];
     }
 
@@ -60,11 +60,12 @@ class ConfiguracionesSearch extends Configuraciones
         // grid filtering conditions
         $query->andFilterWhere([
             'pkConfiguracion' => $this->pkConfiguracion,
+            'fkClienteAdmin' => $this->fkClienteAdmin,
+            'fkMonedaDefecto' => $this->fkMonedaDefecto,
         ]);
 
-        $query->andFilterWhere(['like', 'tipoClienteDefecto', $this->tipoClienteDefecto])
-            ->andFilterWhere(['like', 'emailAdministrador', $this->emailAdministrador])
-            ->andFilterWhere(['like', 'cuentaAdminMovil', $this->cuentaAdminMovil]);
+        $query->andFilterWhere(['ilike', 'tipoClienteDefecto', $this->tipoClienteDefecto])
+            ->andFilterWhere(['ilike', 'emailAdministrador', $this->emailAdministrador]);
 
         return $dataProvider;
     }

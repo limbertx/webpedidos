@@ -44,6 +44,7 @@ AppAsset::register($this);
             ['label' => 'Clientes', 'url' => ['/clientes/index']],
             ['label' => 'Productos', 'url' => ['/productos/index']],
             ['label' => 'Pedidos', 'url' => ['/pedidos/index']],
+            ['label' => 'Configuracion', 'url' => ['/configuraciones/create']],
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
 

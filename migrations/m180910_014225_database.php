@@ -38,7 +38,8 @@ class m180910_014225_database extends Migration
             'pkConfiguracion' => $this->primaryKey(),
             'tipoClienteDefecto'   => $this->string(25)->notNull(),
             'emailAdministrador' => $this->string(50)->notNull(),
-            'cuentaAdminMovil'  => $this->string(50)->notNull()
+            'fkClienteAdmin'  => $this->integer()->notNull(),
+            'fkMonedaDefecto'  => $this->integer()->notNull(),
         ]);
 
         $this->createTable('medidas', [
@@ -49,7 +50,7 @@ class m180910_014225_database extends Migration
 
         $this->insert('medidas', [
             'descripcion' => 'Unidad',
-            'content' => 'ud.',
+            'abreviatura' => 'ud.',
         ]);
 
         $this->createTable('productos', [
@@ -60,7 +61,6 @@ class m180910_014225_database extends Migration
             'precioIntermedio' => $this->decimal(10, 2)->notNull(),
             'precioMayorista' => $this->decimal(10, 2)->notNull(),
             'precioMinorista' => $this->decimal(10, 2)->notNull(),
-            'fkMoneda' => $this->integer()->notNull(),
         ]);
 
         // creamos index para columna fkMedida
@@ -77,23 +77,6 @@ class m180910_014225_database extends Migration
             'fkMedida',
             'medidas',
             'pkMedida',
-            'RESTRICT'
-        );
-
-        // index para la tabla monedas
-        $this->createIndex(
-            'idx-productos-fkmoneda',
-            'productos',
-            'fkMoneda'
-        );
-
-        // add foreign key for table productos
-        $this->addForeignKey(
-            'fk-productos-fkmoneda',
-            'productos',
-            'fkMoneda',
-            'monedas',
-            'pkMoneda',
             'RESTRICT'
         );
 

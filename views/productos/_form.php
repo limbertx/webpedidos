@@ -49,32 +49,16 @@ use app\models\Medidas;
         <div class="col-sm-6">
             <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
             <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>            
-            <div class="row">
-                <div class="col-sm-6">
-                    <?= $form->field($model, 'fkMedida')->widget(Select2::classname(), [
-                            'hideSearch' => true,
-                            'data' => ArrayHelper::map(Medidas::find()->all(), 'pkMedida', 'descripcion'),
-                            'language'=>'es',
-                            'options' => ['placeholder' => 'Seleccione medida...'],
-                            'pluginOptions' => [
-                                'allowClear' => true
-                            ],
-                        ]);
-                    ?>                    
-                </div>
-                <div class="col-sm-6">
-                    <?= $form->field($model, 'fkMoneda')->widget(Select2::classname(), [
-                            'hideSearch' => true,
-                            'data' => ArrayHelper::map(Monedas::find()->all(), 'pkMoneda', 'descripcion'),
-                            'language'=>'es',
-                            'options' => ['placeholder' => 'Seleccione moneda...'],
-                            'pluginOptions' => [
-                                'allowClear' => true
-                            ],
-                        ]);
-                    ?>                    
-                </div>
-            </div>
+            <?= $form->field($model, 'fkMedida')->widget(Select2::classname(), [
+                    'hideSearch' => true,
+                    'data' => ArrayHelper::map(Medidas::find()->all(), 'pkMedida', 'descripcion'),
+                    'language'=>'es',
+                    'options' => ['placeholder' => 'Seleccione medida...'],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
+                ]);
+            ?>
             <div class="row">
                 <div class="col-sm-4">
                     <?= $form->field($model, 'precioIntermedio')->textInput(['maxlength' => true]) ?>

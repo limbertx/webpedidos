@@ -26,7 +26,6 @@ $this->params['breadcrumbs'][] = ['label' => 'Productos', 'url' => ['index']];
                     'precioIntermedio',
                     'precioMayorista',
                     'precioMinorista',
-                    'fkMoneda0.descripcion',
                 ],
             ]) ?>
         </div>

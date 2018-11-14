@@ -43,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <td><?= $producto->precioMayorista; ?></td>
                 <td><?= $producto->precioIntermedio; ?></td>
                 <td><?= $producto->precioMinorista; ?></td>
-                <td><?= $producto->fkMedida0->descripcion; ?></td>
+                <td><?= "Bolivianos" ?></td>
                 <td style="white-space:nowrap; width: 1%;">
                     <a href="<?= Url::to(['productos/view', 'id'=>$producto->pkProducto])?>" data-toggle="tooltip" title="Ver">
                         <span class="glyphicon glyphicon-eye-open"></span> 
