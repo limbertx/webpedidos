@@ -20,7 +20,7 @@
         "yiisoft/yii2-swiftmailer": "~2.0.0",
         "kartik-v/yii2-widgets": "^3.4",
         "kartik-v/yii2-mpdf": "dev-master",
-        "opensooq/yii2-firebase-notifications": "dev-master"
+        "paragraph1/php-fcm": "^0.7.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

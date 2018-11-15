@@ -3,13 +3,20 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Message;
+use app\models\MessageNotification;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+
+use paragraph1\phpFCM\Client;
+use paragraph1\phpFCM\Message;
+use paragraph1\phpFCM\Recipient\Device;
+use paragraph1\phpFCM\Notification;
+
+//require_once '../vendor/autoload.php';
 
 class SiteController extends Controller
 {
@@ -117,15 +124,33 @@ class SiteController extends Controller
         ]);
     }
     public function actionSend(){
-        $titulo = Yii::$app->request->get("titulo");
-        $mensaje = Yii::$app->request->get("mensaje");
-        if(isset($titulo) || isset($mensaje)){
-            $model = new Message();    
+        //$titulo = Yii::$app->request->get("titulo");
+        //$mensaje = Yii::$app->request->get("mensaje");
+        //Yii::warning("mensaje : " . $mensaje);
+
+        /*if(isset($titulo) || isset($mensaje)){
+            Yii::warning("mensaje : " . $mensaje);            
+            $model = new MessageNotification();    
             return $this->redirect(['about']);
-        }else{
-            $service = new FirebaseNotifications(['authKey' => 'AAAAy9IgdN4:APA91bGA8dsWzCfoRwy0npwqboLxvDhrI_6HAEplY0pjXMSeEzVbqvIUYVuNrSM0l5H_ZecVpwJsF5EqsCI1pMrd3DcdSs_5Rkz890EkrjXgMPxeq-Cru-ATN0J4j8SY3-P7x-feNYCj']);
-            $service->sendNotification($tokens, $message);
-        }
+        }else{*/
+            //$apiKey = 'AAAAy9IgdN4:APA91bGA8dsWzCfoRwy0npwqboLxvDhrI_6HAEplY0pjXMSeEzVbqvIUYVuNrSM0l5H_ZecVpwJsF5EqsCI1pMrd3DcdSs_5Rkz890EkrjXgMPxeq-Cru-ATN0J4j8SY3-P7x-feNYCj';
+            $apiKey="AIzaSyAx9N126CImme4p9o2qDfjmiphUPR-sASQ";
+            $client = new Client();
+            $client->setApiKey($apiKey);
+            $client->injectHttpClient(new \GuzzleHttp\Client());
+
+            $note = new Notification('test title', 'testing body');
+            $note->setIcon('notification_icon_resource_name')
+                ->setColor('#ffffff')
+                ->setBadge(1);
+            $message = new Message();
+            $message->addRecipient(new Device('fQNQHUCVeCc:APA91bE40i20_1cTSfNIqqr0Z9EtiSE7OYE3RD4PECEv1B4fjlTWd1bhTM19Ju8kTp_FMGrCRlyFarDpbCnv9a9VhsPdw-5rw5gNsFsLDT9doyCWZoFwZdJBGaXR6-N6Wd6LmwIqRFx9'));
+            $message->setNotification($note)
+                ->setData(array('someId' => 111));
+
+            $response = $client->send($message);
+            var_dump($response->getStatusCode());
+        //}
             
     }
     /**
@@ -135,7 +160,7 @@ class SiteController extends Controller
      */
     public function actionAbout()
     {
-        $model = new Message();
+        $model = new MessageNotification();
         $model->titulo = "";
         $model->mensaje= "";
 

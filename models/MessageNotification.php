@@ -8,7 +8,7 @@ use yii\data\ActiveDataProvider;
 use app\models\Productos;
 
 
-class Message extends Model
+class MessageNotification extends Model
 {
     public $titulo;
     public $mensaje;

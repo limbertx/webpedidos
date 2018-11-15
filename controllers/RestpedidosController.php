@@ -11,6 +11,11 @@ use app\models\Pedidos;
 use app\models\PedidoDetalles;
 use yii\helpers\BaseJson;
 
+use paragraph1\phpFCM\Client;
+use paragraph1\phpFCM\Message;
+use paragraph1\phpFCM\Recipient\Device;
+use paragraph1\phpFCM\Notification;
+
 class RestpedidosController extends ActiveController {
 
 	public $modelClass = "app\models\Medidas";
@@ -62,8 +67,8 @@ class RestpedidosController extends ActiveController {
 
 		$data = Yii::$app->request->post();
 		$token = $data["token"];
-		$telefono = $data["telefono"];
-		$pkClliente = $data["fkCliente"];
+		$telefono = $data["telfMovil"];
+		$pkClliente = $data["pkCliente"];
 
 		$client = Clientes::find()
 						->where(['telfMovil' => $telefono])
@@ -134,7 +139,32 @@ class RestpedidosController extends ActiveController {
 			$response["response"] = $model->getErrors();
 		}
 		
+		if($response["status"]=="200"){
+			//entonces esta ok enviamos una notificacion al administrador
+			$this->sendNotification($model->fkCliente0->nombres. " " . $model->fkCliente0->apellidos);
+		}
+
 		return $response;
+	}
+
+	public function sendNotification($nombres){
+        $apiKey="AIzaSyAx9N126CImme4p9o2qDfjmiphUPR-sASQ";
+        $client = new Client();
+        $client->setApiKey($apiKey);
+        $client->injectHttpClient(new \GuzzleHttp\Client());
+        $title = "Pedido de producto";
+        $message = "Tiene un pedido del cliente : " . $nombres;
+
+        $note = new Notification($title, $message);
+        $note->setIcon('notification_icon_resource_name')
+            ->setColor('#ffffff')
+            ->setBadge(1);
+        $message = new Message();
+        $message->addRecipient(new Device('fQNQHUCVeCc:APA91bE40i20_1cTSfNIqqr0Z9EtiSE7OYE3RD4PECEv1B4fjlTWd1bhTM19Ju8kTp_FMGrCRlyFarDpbCnv9a9VhsPdw-5rw5gNsFsLDT9doyCWZoFwZdJBGaXR6-N6Wd6LmwIqRFx9'));
+        $message->setNotification($note)
+            ->setData(array('someId' => 111));
+
+        $response = $client->send($message);
 	}
 	/**
 	 * metodo que envia un cliente a la peticion en base al telefono del cliente 
