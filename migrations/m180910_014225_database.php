@@ -42,6 +42,24 @@ class m180910_014225_database extends Migration
             'fkMonedaDefecto'  => $this->integer()->notNull(),
         ]);
 
+        $this->addForeignKey(
+            'fk-configuraciones-fkClienteAdmin',
+            'configuraciones',
+            'fkClienteAdmin',
+            'clientes',
+            'pkCliente',
+            'RESTRICT'
+        );
+
+        $this->addForeignKey(
+            'fk-configuraciones-moneda',
+            'configuraciones',
+            'fkMonedaDefecto',
+            'monedas',
+            'pkMoneda',
+            'RESTRICT'
+        );
+
         $this->createTable('medidas', [
             'pkMedida' => $this->primaryKey(),
             'descripcion'   => $this->string(25)->notNull(),

@@ -12,6 +12,9 @@ use Yii;
  * @property string $emailAdministrador
  * @property int $fkClienteAdmin
  * @property int $fkMonedaDefecto
+ *
+ * @property Clientes $fkClienteAdmin0
+ * @property Monedas $fkMonedaDefecto0
  */
 class Configuraciones extends \yii\db\ActiveRecord
 {
@@ -34,6 +37,8 @@ class Configuraciones extends \yii\db\ActiveRecord
             [['fkClienteAdmin', 'fkMonedaDefecto'], 'integer'],
             [['tipoClienteDefecto'], 'string', 'max' => 25],
             [['emailAdministrador'], 'string', 'max' => 50],
+            [['fkClienteAdmin'], 'exist', 'skipOnError' => true, 'targetClass' => Clientes::className(), 'targetAttribute' => ['fkClienteAdmin' => 'pkCliente']],
+            [['fkMonedaDefecto'], 'exist', 'skipOnError' => true, 'targetClass' => Monedas::className(), 'targetAttribute' => ['fkMonedaDefecto' => 'pkMoneda']],
         ];
     }
 
@@ -43,11 +48,27 @@ class Configuraciones extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'pkConfiguracion' => 'Identificador primario',
+            'pkConfiguracion' => 'Pk Configuracion',
             'tipoClienteDefecto' => 'Tipo Cliente Defecto',
             'emailAdministrador' => 'Email Administrador',
-            'fkClienteAdmin' => 'Cliente administrador',
-            'fkMonedaDefecto' => 'Tipo de Moneda',
+            'fkClienteAdmin' => 'Fk Cliente Admin',
+            'fkMonedaDefecto' => 'Fk Moneda Defecto',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFkClienteAdmin0()
+    {
+        return $this->hasOne(Clientes::className(), ['pkCliente' => 'fkClienteAdmin']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFkMonedaDefecto0()
+    {
+        return $this->hasOne(Monedas::className(), ['pkMoneda' => 'fkMonedaDefecto']);
     }
 }

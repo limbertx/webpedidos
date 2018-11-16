@@ -39,7 +39,11 @@ class ConfiguracionesController extends Controller
         $model = new Configuraciones();
 
         if ($model->load(Yii::$app->request->post())){
-            $config = Configuraciones::findOne(1);
+            $config = Configuraciones::find()->orderBy("pkConfiguracion DESC")->one();
+            
+            if($config==null){
+                $config = new Configuraciones();
+            }
             $config->tipoClienteDefecto = $model->tipoClienteDefecto;
             $config->emailAdministrador = $model->emailAdministrador;
             $config->fkClienteAdmin = $model->fkClienteAdmin;
@@ -51,7 +55,11 @@ class ConfiguracionesController extends Controller
             ]);
         }else{
             Yii::warning("BUSCANDO EL UNO!!");
-            $model = Configuraciones::findOne(1);
+            //$model = Configuraciones::findOne(1);
+            $model = Configuraciones::find()->orderBy("pkConfiguracion DESC")->one();
+            if($model==null){
+                $model = new Configuraciones();
+            }
         }
     
         return $this->render('create', [

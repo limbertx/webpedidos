@@ -5,6 +5,7 @@ namespace app\controllers;
 use kartik\mpdf\Pdf;
 use Yii;
 use app\models\Pedidos;
+use app\models\MessageNotification;
 use app\models\PedidosSearch;
 use yii\data\Pagination;
 use yii\web\Controller;
@@ -112,13 +113,18 @@ class PedidosController extends Controller
         return $pdf->render();
     }
     /**
-     * 
+     * metodo que atiende el pedido
      */
     public function actionAttend($id){
         $pedidos = $this->findModel($id);
         $pedidos->estadoPedido="ATENDIDO";
-        $pedidos->save();
-
+        if($pedidos->save()){
+            $token = $pedidos->fkCliente0->token;
+            $code = str_pad((string)$pedidos->pkPedido, 6, "0", STR_PAD_LEFT);
+            $title = "Pedido Nº. : " . $code . " Ha sido atendido.";
+            $message = "Su pedido fue atendido pronto tendra noticias.";
+            MessageNotification::sendNotification($token, $title, $message);
+        }
         return $this->redirect(['index']);
     }
     /**
