@@ -34,7 +34,6 @@ $this->params['breadcrumbs'][] = $this->title;
             <th>Direccion</th>
             <th>Telefono</th>
             <th></th>
-            <th></th>
         </tr>
         <?php foreach($clientes as $cliente){ ?>
             <tr>
@@ -53,7 +52,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         <span class="glyphicon glyphicon-trash"></span> 
                     </a>
                 </td>
-                <td><?= $cliente->token; ?></td>
             </tr>
         <?php }?>
     </table>

@@ -47,7 +47,7 @@ class PedidosController extends Controller
             if($searchModel->validate()){
                 $search = Html::encode($searchModel->search);
                 $query = Pedidos::find()                            
-                            ->Where(["like", "estadoPedido", $search]);
+                            ->Where(["like", "estadoPedido", $search])->orderBy(["fechaPedido"=>SORT_DESC]);
 
 
                 $count = $query->count();
@@ -65,7 +65,7 @@ class PedidosController extends Controller
             }
 
         }else{ // cuando no llega ninguna busqueda
-            $query = Pedidos::find();
+            $query = Pedidos::find()->orderBy(["fechaPedido"=>SORT_DESC]);
             $count = $query->count();
             
             $pagination = new Pagination([
