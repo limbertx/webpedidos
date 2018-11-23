@@ -49,11 +49,62 @@ class RestpedidosController extends ActiveController {
 			$response["status"] = "200";
 			$response["response"] = $lista; 
 		}else{
-			$response["status"] = "404";
+			$response["status"] = "505";
+			$response["response"] = "No se encontro ningun producto"; 
+		}	
+		return $response;		
+	}
+	/**
+	 * metodo que obtiene todos los pedidos pendientes o 
+	 * @param  [type] $pkCliente [description]
+	 * @return [type]            [description]
+	 */
+	public function actionGetpedidos($pkCliente){
+		$response = array();
+
+		$pedidos = Pedidos::find()
+							->where(['fkCliente'=>$pkCliente])
+							->orderBy('fechaPedido')
+							->all();
+		$lista = array();
+		$config = Configuraciones::find()->orderBy("pkConfiguracion DESC")->one();
+		foreach ($pedidos as $pedido) {
+			$item = array();
+			$item["pkPedido"] = $pedido->pkPedido;
+			$item["fkCliente"] = $pedido->fkCliente;
+			$item["fechaPedido"] = $pedido->fechaPedido;
+			$item["fechaAtendida"] = $pedido->fechaAtendida;
+			$item["fechaEntregado"] = $pedido->fechaEntregado;
+			$item["precioTotal"] = $pedido->precioTotal;
+			$item["estadoPedido"] = $pedido->estadoPedido;
+													
+			$item["moneda"] = $config->fkMonedaDefecto0->abreviatura;
+			$det_pedidos = $pedido->pedidoDetalles;
+			$detalles = array();
+			foreach ($det_pedidos as $det) {
+				$det_item = array();
+				$det_item["fkProducto"]= $det->fkProducto;
+				$det_item["producto_nombre"]= $det->fkProducto0->nombre;
+ 				$det_item["producto_descripcion"]=$det->fkProducto0->descripcion;   
+ 				$det_item["producto_medida"]=$det->fkProducto0->fkMedida0->abreviatura;
+				$det_item["cantidad"] = $det->cantidad;
+				$det_item["precioUnitario"]=$det->precioUnitario;
+				$det_item["precioTotal"]=$det->precioTotal;
+				$detalles[]=$det_item;
+			}
+			$item["detalles"]=$detalles;
+			$lista[] = $item;
+		}
+		if(count($lista) > 0){
+			$response["status"] = "200";
+			$response["response"] = $lista; 
+		}else{
+			$response["status"] = "505";
+			$response["response"] = "No se encontro ningun pedido"; 
 		}	
 		return $response;
 		
-	}
+	}	
 	public function actionUpdatetoken(){		
 		$response = array();
 		if(!Yii::$app->request->post()){

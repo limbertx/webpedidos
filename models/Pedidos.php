@@ -12,6 +12,7 @@ use Yii;
  * @property int $fkCliente
  * @property string $fechaPedido
  * @property string $fechaAtendida
+ * @property string $fechaEntregado
  * @property string $precioTotal
  * @property string $estadoPedido
  *
@@ -36,7 +37,7 @@ class Pedidos extends \yii\db\ActiveRecord
         return [
             [['codigo', 'fkCliente', 'fechaPedido', 'precioTotal', 'estadoPedido'], 'required'],
             [['fkCliente'], 'integer'],
-            [['fechaPedido', 'fechaAtendida'], 'safe'],
+            [['fechaPedido', 'fechaAtendida', 'fechaEntregado'], 'safe'],
             [['precioTotal'], 'number'],
             [['codigo'], 'string', 'max' => 25],
             [['estadoPedido'], 'string', 'max' => 50],
@@ -55,6 +56,7 @@ class Pedidos extends \yii\db\ActiveRecord
             'fkCliente' => 'Fk Cliente',
             'fechaPedido' => 'Fecha Pedido',
             'fechaAtendida' => 'Fecha Atendida',
+            'fechaEntregado' => 'Fecha Entregado',
             'precioTotal' => 'Precio Total',
             'estadoPedido' => 'Estado Pedido',
         ];

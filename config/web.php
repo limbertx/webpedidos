@@ -96,7 +96,8 @@ $config = [
                         'POST setpedido' => 'setpedido',
                         'GET getcliente/<telefono>' => 'getcliente',
                         'POST updatecliente' => 'updatecliente',
-                        'POST updatetoken' => 'updatetoken'
+                        'POST updatetoken' => 'updatetoken',
+                        'GET getpedidos/<pkCliente>' => 'getpedidos',
                     ]
                 ],
 
