@@ -166,12 +166,11 @@ class RestpedidosController extends ActiveController {
 			$detalles = json_decode($detail);
 			foreach ($detalles as $detalle){
 				$modelDetalle = new PedidoDetalles();
-				$modelDetalle->fkPedido = $model->pkPedido;				
+				$modelDetalle->fkPedido = $model->pkPedido;
 				$modelDetalle->cantidad = $detalle->cantidad;
 				$modelDetalle->precioUnitario = $detalle->precioUnitario;
-				$modelDetalle->precioTotal = $detalle->precioTotal;
-				$producto = $detalle->producto;
-				$modelDetalle->fkProducto = $producto->pkProducto;
+				$modelDetalle->precioTotal = $detalle->precioTotal;				
+				$modelDetalle->fkProducto = $detalle->fkProducto;
 				//$modelDetalle->fkProducto = $detalle->fkProducto;
 				// enviar fkProducto, cantidad, precioUnitario, precioTotal
 				if($modelDetalle->save()){ // $modelDetalle->save()
