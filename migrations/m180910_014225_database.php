@@ -15,12 +15,14 @@ class m180910_014225_database extends Migration
 
         $this->createTable('clientes', [
             'pkCliente' => $this->primaryKey(),
-            'nombres'   => $this->string(50)->notNull(),
-            'apellidos' => $this->string(50),
+            'nombres'   => $this->string(100)->notNull(),
+            'apellidos' => $this->string(1),
             'direccion' => $this->string(50),
             'telfMovil' => $this->string(25)->notNull(),
             'tipoCliente' => $this->string(25)->notNull(), // es may. min.inter
-            'tipoCuenta' => $this->string(25) // admin, user
+            'tipoCuenta' => $this->string(25)->notNull(), // admin, user
+            'token'      =>$this->string(256),
+            'documento'  => $this->string(50)
         ]);
 
         $this->createTable('monedas', [
@@ -131,7 +133,8 @@ class m180910_014225_database extends Migration
             'fechaPedido'   => $this->datetime()->notNull(),
             'fechaAtendida' => $this->datetime(),
             'precioTotal'   => $this->decimal(10, 2)->notNull(),
-            'estadoPedido'  => $this->string(50)->notNull()
+            'estadoPedido'  => $this->string(50)->notNull(),
+            'fechaEntregado'=> $this->datetime()
         ]);
 
         $this->createIndex(

@@ -188,14 +188,16 @@ class RestpedidosController extends ActiveController {
 		
 		if($response["status"]=="200"){
 			//entonces esta ok enviamos una notificacion al administrador
-			$config = Configuraciones::find()->orderBy("pkConfiguracion DESC")->one();
-
-			$token = $config->fkClienteAdmin0->token;
-	        $code = str_pad((string)$model->pkPedido, 6, "0", STR_PAD_LEFT);
-        	$title = "Pedido de producto nro: " . $code;
-	        $message = "Tiene un pedido del cliente : " . $model->fkCliente0->nombres. " " . $model->fkCliente0->apellidos;
-
-			MessageNotification::sendNotification($token, $title, $message);
+			$config = Configuraciones::find()
+							->orderBy("pkConfiguracion DESC")
+							->one();
+			if(!is_null($config)){
+				$token = $config->fkClienteAdmin0->token;
+		        $code = str_pad((string)$model->pkPedido, 6, "0", STR_PAD_LEFT);
+	        	$title = "Pedido de producto nro: " . $code;
+		        $message = "Tiene un pedido del cliente : " . $model->fkCliente0->nombres. " " . $model->fkCliente0->apellidos;
+				MessageNotification::sendNotification($token, $title, $message);
+			}
 		}
 		return $response;
 	}
@@ -221,6 +223,7 @@ class RestpedidosController extends ActiveController {
 			$item["pkCliente"]	 = $client->pkCliente;
 			$item["nombres"] 	 = $client->nombres;
 			$item["apellidos"]   = $client->apellidos;
+			$item["documento"] 	 = $client->documento;
 			$item["direccion"]   = $client->direccion;
 			$item["telfMovil"]   = $client->telfMovil;
 			$item["tipoCliente"] = $client->tipoCliente;
@@ -252,6 +255,7 @@ class RestpedidosController extends ActiveController {
 		if($client != null){ // entonces actualizamos
 			$client->nombres   = $item["nombres"];
 			$client->apellidos = $item["apellidos"];
+			$client->documento = $item["documento"];
 			$client->direccion = $item["direccion"];
 			$client->telfMovil = $item["telfMovil"];
 			//$client->tipoCliente = $item["tipoCliente"];
@@ -263,6 +267,7 @@ class RestpedidosController extends ActiveController {
 			$client = new Clientes();
 			$client->nombres   = $item["nombres"];
 			$client->apellidos = $item["apellidos"];
+			$client->documento = $item["documento"];
 			$client->direccion = $item["direccion"];
 			$client->telfMovil = $item["telfMovil"];
 			//$client->tipoCliente = $item["tipoCliente"];

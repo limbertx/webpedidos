@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'nombres',
-            'apellidos',
+            'documento',
             'direccion',
             'telfMovil',
             'tipoCliente'

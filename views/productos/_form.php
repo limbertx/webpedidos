@@ -61,13 +61,13 @@ use app\models\Medidas;
             ?>
             <div class="row">
                 <div class="col-sm-4">
+                    <?= $form->field($model, 'precioMinorista')->textInput(['maxlength' => true]) ?>
+                </div>                
+                <div class="col-sm-4">
                     <?= $form->field($model, 'precioIntermedio')->textInput(['maxlength' => true]) ?>
                 </div>
                 <div class="col-sm-4">
                     <?= $form->field($model, 'precioMayorista')->textInput(['maxlength' => true]) ?>                    
-                </div>
-                <div class="col-sm-4">
-                    <?= $form->field($model, 'precioMinorista')->textInput(['maxlength' => true]) ?>
                 </div>
             </div>
 

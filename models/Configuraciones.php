@@ -51,8 +51,8 @@ class Configuraciones extends \yii\db\ActiveRecord
             'pkConfiguracion' => 'Pk Configuracion',
             'tipoClienteDefecto' => 'Tipo Cliente Defecto',
             'emailAdministrador' => 'Email Administrador',
-            'fkClienteAdmin' => 'Fk Cliente Admin',
-            'fkMonedaDefecto' => 'Fk Moneda Defecto',
+            'fkClienteAdmin' => 'Administrador',
+            'fkMonedaDefecto' => 'Tipo de moneda por defecto',
         ];
     }
 

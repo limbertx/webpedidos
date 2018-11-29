@@ -11,11 +11,11 @@ use kartik\widgets\Select2;
 
     <?= $form->field($model, 'nombres')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'apellidos')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'documento')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'direccion')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'telfMovil')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'telfMovil')->textInput(['maxlength' => true, 'disabled' => true]) ?>
 
     <?=
         $form->field($model, 'tipoCliente')->widget(Select2::classname(), [

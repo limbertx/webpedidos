@@ -35,7 +35,9 @@ class Clientes extends \yii\db\ActiveRecord
     {
         return [
             [['nombres', 'telfMovil', 'tipoCliente'], 'required'],
-            [['nombres', 'apellidos', 'direccion'], 'string', 'max' => 50],
+            [['nombres'], 'string', 'max' => 100],
+            [['token'], 'string', 'max' => 256],
+            [['apellidos', 'direccion', 'documento'], 'string', 'max' => 50],
             [['telfMovil', 'tipoCliente', 'tipoCuenta'], 'string', 'max' => 25],
         ];
     }
@@ -47,12 +49,14 @@ class Clientes extends \yii\db\ActiveRecord
     {
         return [
             'pkCliente' => 'Identificador de cliente',
-            'nombres' => 'Nombres',
+            'nombres' => 'Nombres Completo/Empresa',
             'apellidos' => 'Apellidos',
             'direccion' => 'Direccion',
             'telfMovil' => 'Telefono',
             'tipoCliente' => 'Tipo Cliente',
             'tipoCuenta' => 'Tipo Cuenta',
+            'documento' => 'Ci/Nit',
+            'token'=>"token"
         ];
     }
 

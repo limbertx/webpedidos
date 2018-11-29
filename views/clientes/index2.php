@@ -29,8 +29,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php $form->end(); ?>
     <table class="table table-bordered">
         <tr>
-            <th>Nombres</th>
-            <th>Apellidos</th>
+            <th>Nombres Completos/Empresa</th>
+            <th>Ci / Nit</th>
             <th>Direccion</th>
             <th>Telefono</th>
             <th></th>
@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php foreach($clientes as $cliente){ ?>
             <tr>
                 <td><?= $cliente->nombres; ?></td>
-                <td><?= $cliente->apellidos; ?></td>
+                <td><?= $cliente->documento; ?></td>
                 <td><?= $cliente->direccion; ?></td>
                 <td><?= $cliente->telfMovil; ?></td>
                 <td style="white-space:nowrap; width: 1%;">
