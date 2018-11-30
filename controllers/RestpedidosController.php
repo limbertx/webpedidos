@@ -207,7 +207,7 @@ class RestpedidosController extends ActiveController {
 			        $code = str_pad((string)$model->pkPedido, 6, "0", STR_PAD_LEFT);
 		        	$title = "Pedido de producto nro: " . $code;
 			        $message = "Tiene un pedido del cliente : " . $model->fkCliente0->nombres;
-			        if($token==null){
+			        if($token!=null){
 			        	MessageNotification::sendNotification($token, $title, $message);	
 			        }					
 				}
