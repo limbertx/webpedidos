@@ -11,17 +11,19 @@ use app\models\Productos;
 class PedidosSearch extends Model
 {
     public $search;
+    public $optionSearch;
     
     public function rules()
     {
         return [            
-            [['search'], 'safe' ]
+            [['search', 'optionSearch'], 'safe' ]
         ]; 
     }
 
     public function attributeLabels(){
         return [            
-            'search' => 'Buscar'
+            'search' => 'Buscar',
+            'optionSearch' => 'radio'
         ]; 
     }
 }

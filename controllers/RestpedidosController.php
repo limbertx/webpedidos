@@ -72,9 +72,18 @@ class RestpedidosController extends ActiveController {
 			$item = array();
 			$item["pkPedido"] = $pedido->pkPedido;
 			$item["fkCliente"] = $pedido->fkCliente;
-			$item["fechaPedido"] = $pedido->fechaPedido;
-			$item["fechaAtendida"] = $pedido->fechaAtendida;
-			$item["fechaEntregado"] = $pedido->fechaEntregado;
+			$item["fechaPedido"] = Yii::$app
+										->formatter
+										->asDate($pedido->fechaPedido, 
+												'dd-MM-yyyy HH:mm');
+			$item["fechaAtendida"] = Yii::$app
+										->formatter
+										->asDate($pedido->fechaAtendida,
+												'dd-MM-yyyy HH:mm');
+			$item["fechaEntregado"] =  Yii::$app
+										->formatter
+										->asDate($pedido->fechaEntregado,
+												'dd-MM-yyyy HH:mm');
 			$item["precioTotal"] = $pedido->precioTotal;
 			$item["estadoPedido"] = $pedido->estadoPedido;
 													
@@ -188,15 +197,20 @@ class RestpedidosController extends ActiveController {
 		
 		if($response["status"]=="200"){
 			//entonces esta ok enviamos una notificacion al administrador
-			$config = Configuraciones::find()
-							->orderBy("pkConfiguracion DESC")
-							->one();
-			if(!is_null($config)){
-				$token = $config->fkClienteAdmin0->token;
-		        $code = str_pad((string)$model->pkPedido, 6, "0", STR_PAD_LEFT);
-	        	$title = "Pedido de producto nro: " . $code;
-		        $message = "Tiene un pedido del cliente : " . $model->fkCliente0->nombres. " " . $model->fkCliente0->apellidos;
-				MessageNotification::sendNotification($token, $title, $message);
+			$clientes = Clientes::find()
+							->Where(["like", "tipoCuenta", "ADMINISTRADOR"])
+							->orderBy("nombres DESC")
+							->all();
+			if(!is_null($clientes)){
+				foreach ($clientes as $cliente) {
+					$token = $cliente->token;
+			        $code = str_pad((string)$model->pkPedido, 6, "0", STR_PAD_LEFT);
+		        	$title = "Pedido de producto nro: " . $code;
+			        $message = "Tiene un pedido del cliente : " . $model->fkCliente0->nombres;
+			        if($token==null){
+			        	MessageNotification::sendNotification($token, $title, $message);	
+			        }					
+				}
 			}
 		}
 		return $response;

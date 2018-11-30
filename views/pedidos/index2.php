@@ -11,8 +11,8 @@ $this->title = 'Pedidos';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="pedidos-index">
-
     <h1><?= Html::encode($this->title) ?></h1>
+    
     <?php Pjax::begin(); ?>   
         <?php $form = ActiveForm::begin([
             "method"     => "get",
@@ -20,9 +20,20 @@ $this->params['breadcrumbs'][] = $this->title;
             "enableClientValidation"=> true
         ]);?>
 
+        <?= $form->field($searchModel, 'optionSearch')->radioList(
+            [
+                 'PENDIENTE' => 'Pedidos Pendientes',
+                 'ATENDIDO'  => 'Pedidos Atendidos',
+                 'ENTREGADO' => 'Pedidos Entregados'
+            ],
+            ['onchange' => "document.forms['w0'].submit()"]
+            )->label('Seleccione el tipo de pedido');
+        ?>
+
         <?= $form->field($searchModel, 'search')->input("search") ?>
              
         <?= Html::submitButton("Buscar", ["class" => "btn btn-primary"])?>
+        <br>
         <?php $form->end(); ?>
         <table class="table table-bordered">
             <tr class="bg-primary">
@@ -33,12 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <th></th>
             </tr>
             <?php foreach($pedidos as $pedido){ ?>
-                <?php if($pedido->estadoPedido == "PENDIENTE"){ ?>
-                    <tr class="danger">
-                <?php }else{ ?>
-                    <tr class="success">
-                <?php }?>
-
+            <tr>
                 <td class="text-center"><?= str_pad((string)$pedido->pkPedido, 6, "0", STR_PAD_LEFT)?></td>                
                 <td><?= $pedido->fkCliente0->nombres ." ". $pedido->fkCliente0->apellidos; ?></td>
                 <td><?= Yii::$app->formatter->asDate($pedido->fechaPedido, 'dd-MM-yyyy HH:mm'); ?></td>                

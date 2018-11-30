@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use yii\db\Expression;
 use kartik\mpdf\Pdf;
 use Yii;
 use app\models\Pedidos;
@@ -46,15 +47,16 @@ class PedidosController extends Controller
         if($searchModel->load(Yii::$app->request->get())){
             if($searchModel->validate()){
                 $search = Html::encode($searchModel->search);
-                $query = Pedidos::find()                            
-                            ->Where(["like", "estadoPedido", $search])->orderBy(["fechaPedido"=>SORT_DESC]);
-
+                $query = Pedidos::find()
+                            ->Where(["like", "estadoPedido", $searchModel
+                                ->optionSearch])
+                            ->orderBy(["fechaPedido"=>SORT_DESC]);
 
                 $count = $query->count();
 
                 $pagination = new Pagination([
                                         "totalCount"=>$count,
-                                        "pageSize"=> 5
+                                        "pageSize"=> 100
                                     ]);
 
                 $pedidos = $query->offset($pagination->offset)
@@ -63,20 +65,21 @@ class PedidosController extends Controller
             }else{
                 $searchModel->getErrors();
             }
-
         }else{ // cuando no llega ninguna busqueda
-            $query = Pedidos::find()->orderBy(["fechaPedido"=>SORT_DESC]);
-            $count = $query->count();
-            
+            $searchModel->optionSearch = 'PENDIENTE';
+            $query = Pedidos::find()
+                        ->Where(["like", "estadoPedido", $searchModel
+                            ->optionSearch])
+                            ->orderBy(["fechaPedido"=>SORT_DESC]);
+            $count = $query->count();        
             $pagination = new Pagination([
                                     "totalCount"=>$count,
-                                    "pageSize"=> 5
+                                    "pageSize"=> 100
                                 ]);
             $pedidos = $query->offset($pagination->offset)
                               ->limit($pagination->limit)
                               ->all();
         }
-
         return $this->render('index2', [
             "pedidos" => $pedidos,
             "searchModel" => $searchModel,
@@ -115,14 +118,21 @@ class PedidosController extends Controller
     /**
      * metodo que atiende el pedido
      */
-    public function actionAttend($id){
+    public function actionAttend($id, $estado){
         $pedidos = $this->findModel($id);
-        $pedidos->estadoPedido="ATENDIDO";
+        if($estado=="ATENDIDO"){
+            $pedidos->fechaAtendida = new Expression('NOW()');
+        }else{
+            if($estado=="ENTREGADO"){
+                $pedidos->fechaEntregado = new Expression('NOW()');
+            }
+        }
+        $pedidos->estadoPedido=$estado;        
         if($pedidos->save()){
             $token = $pedidos->fkCliente0->token;
             $code = str_pad((string)$pedidos->pkPedido, 6, "0", STR_PAD_LEFT);
-            $title = "Pedido Nº. : " . $code . " Ha sido atendido.";
-            $message = "Su pedido fue atendido pronto tendra noticias.";
+            $title = "Pedido Nº. : " . $code . " Ha sido $estado.";
+            $message = "Su pedido fue $estado pronto tendra noticias.";
             MessageNotification::sendNotification($token, $title, $message);
         }
         return $this->redirect(['index']);
@@ -138,12 +148,23 @@ class PedidosController extends Controller
         $pedidos = $this->findModel($id);
         
         $code = str_pad((string)$pedidos->pkPedido, 6, "0", STR_PAD_LEFT);
-    
+        $fechaAtendida="Pendiente";
+        $fechaEntregado="Pendiente";
+
+        if($pedidos->fechaAtendida != null){
+            $fechaAtendida = Yii::$app->formatter->asDate($pedidos->fechaAtendida, 'dd-MM-yyyy HH:mm');        
+        }
+        if($pedidos->fechaEntregado != null){
+            $fechaEntregado = Yii::$app->formatter->asDate($pedidos->fechaEntregado, 'dd-MM-yyyy HH:mm');
+        }
+
         return $this->render('view',
          [
             'code' => $code,
             'nombre' => $pedidos->fkCliente0->nombres . " " . $pedidos->fkCliente0->apellidos,
-            'fecha'=>Yii::$app->formatter->asDate($pedidos->fechaPedido, 'dd-MM-yyyy HH:mm'),
+            'fecha' => Yii::$app->formatter->asDate($pedidos->fechaPedido, 'dd-MM-yyyy HH:mm'),
+            'fechaEntregado' => $fechaEntregado,
+            'fechaAtendida' => $fechaAtendida,
             'direccion'=> $pedidos->fkCliente0->direccion,
             'pedidos'=>$pedidos
         ]);

@@ -35,6 +35,21 @@ $this->params['breadcrumbs'][] = ['label' => 'Pedidos', 'url' => ['index']];
             </div>
             <br>
             <div class="row">
+                <div class="col-md-4">
+                    <label for="estadoPedido">Estado de pedido</label>
+                    <input type="input" class="form-control" id="estadoPedido"  value="<?=$pedidos->estadoPedido?>" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label for="fechaAtendido">Fecha Atendida</label>
+                    <input type="input" class="form-control" id="fechaAtendido"  value="<?=$fechaAtendida?>" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label for="fechaEntregado">Fecha de Entrega</label>
+                    <input type="input" class="form-control" id="fechaEntregado"  value="<?=$fechaEntregado?>" readonly>
+                </div>                
+            </div>
+            <br>
+            <div class="row">
                 <div class="col-md-12">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
@@ -88,14 +103,31 @@ $this->params['breadcrumbs'][] = ['label' => 'Pedidos', 'url' => ['index']];
                 </div>
                 <div class="col-md-8"></div>
                 <div class="col-md-2">
-                    <?= Html::a('Atender pedido', [
+                    <?php 
+                        if($pedidos->estadoPedido=="PENDIENTE"){
+                            echo Html::a('Pedido atendido', [
                                     'attend', 
-                                    'id' => $pedidos->pkPedido], 
+                                    'id' => $pedidos->pkPedido, 
+                                    'estado' => 'ATENDIDO'], 
                                     [
                                         'class'=>'btn btn-primary',
-                                        'title' => 'Atender pedido',
+                                        'title' => 'Pedido atendido',
                                         'data-toggle'=>'tooltip',
-                                    ]) ?>
+                                    ]);
+                        }else{
+                            if($pedidos->estadoPedido=="ATENDIDO"){
+                                echo Html::a('Pedido entregado', [
+                                        'attend', 
+                                        'id' => $pedidos->pkPedido,
+                                        'estado' => 'ENTREGADO'],
+                                        [
+                                            'class'=>'btn btn-primary',
+                                            'title' => 'Pedido entregado',
+                                            'data-toggle'=>'tooltip',
+                                        ]);
+                            }
+                        }
+                    ?>
                 </div>
             </div>
         </div>

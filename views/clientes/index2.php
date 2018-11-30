@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= Html::submitButton("Buscar", ["class" => "btn btn-primary"])?>
     <?php $form->end(); ?>
     <table class="table table-bordered">
-        <tr>
+        <tr class="bg-primary">
             <th>Nombres Completos/Empresa</th>
             <th>Ci / Nit</th>
             <th>Direccion</th>
